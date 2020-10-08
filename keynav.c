@@ -24,6 +24,7 @@
 #include <X11/extensions/Xrandr.h>
 #include <glib.h>
 #include <cairo-xlib.h>
+#include <stdbool.h>
 
 #ifdef PROFILE_THINGS
 #include <time.h>
@@ -2069,7 +2070,9 @@ int main(int argc, char **argv) {
     is_daemon = True;
   }
 
-  while (1) {
+  bool is_continue_main_loop = true;
+
+  while (is_continue_main_loop) {
     XEvent e;
     XNextEvent(dpy, &e);
 
@@ -2121,6 +2124,9 @@ int main(int argc, char **argv) {
           query_screens();
         } else {
           printf("Unexpected X11 event: %d\n", e.type);
+	  if(e.type != 65){
+	    is_continue_main_loop = false;
+	  }
         }
         break;
     }
